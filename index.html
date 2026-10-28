@@ -1,0 +1,914 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEHA | MERN Stack & Gen AI Full-Stack Developer</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f5f3ff',
+                            100: '#ede9fe',
+                            500: '#8b5cf6',
+                            600: '#7c3aed',
+                            700: '#6d28d9',
+                            accent: '#06b6d4',
+                            emerald: '#10b981',
+                            amber: '#f59e0b',
+                            rose: '#f43f5e'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['Fira Code', 'monospace']
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <style>
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            transition: background-color 0.4s ease, color 0.4s ease;
+        }
+
+        /* Glassmorphism Styling */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .dark .glass-card {
+            background: rgba(15, 23, 42, 0.75);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        /* Rich Micro-Animations & Dynamic Hover Effects */
+        .hover-lift {
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), 
+                        box-shadow 0.4s ease, 
+                        border-color 0.4s ease;
+            will-change: transform;
+        }
+
+        .hover-lift:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 20px 35px -10px rgba(139, 92, 246, 0.3);
+            border-color: rgba(139, 92, 246, 0.6);
+        }
+
+        .hover-glow-cyan:hover {
+            box-shadow: 0 0 30px rgba(6, 182, 212, 0.35);
+            border-color: rgba(6, 182, 212, 0.6);
+        }
+
+        .hover-glow-emerald:hover {
+            box-shadow: 0 0 30px rgba(16, 185, 129, 0.35);
+            border-color: rgba(16, 185, 129, 0.6);
+        }
+
+        .hover-glow-amber:hover {
+            box-shadow: 0 0 30px rgba(245, 158, 11, 0.35);
+            border-color: rgba(245, 158, 11, 0.6);
+        }
+
+        /* Shimmer Button Effect */
+        .btn-shimmer {
+            position: relative;
+            overflow: hidden;
+        }
+        .btn-shimmer::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                60deg,
+                transparent 30%,
+                rgba(255, 255, 255, 0.25) 50%,
+                transparent 70%
+            );
+            transform: rotate(30deg) translateX(-100%);
+            transition: transform 0.8s ease-in-out;
+        }
+        .btn-shimmer:hover::after {
+            transform: rotate(30deg) translateX(100%);
+        }
+
+        /* Skill Tag Hover Expand */
+        .skill-badge {
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .skill-badge:hover {
+            transform: translateY(-3px) scale(1.08);
+            box-shadow: 0 8px 15px -4px rgba(139, 92, 246, 0.3);
+        }
+
+        /* Glass Nav Bar */
+        .glass-nav {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+        .dark .glass-nav {
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #090d16;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #8b5cf6;
+        }
+
+        /* Typing Cursor */
+        .typing-cursor::after {
+            content: '|';
+            animation: blink 0.9s infinite;
+        }
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        @keyframes pulseGlow {
+            0%, 100% { transform: scale(1); opacity: 0.85; }
+            50% { transform: scale(1.04); opacity: 1; }
+        }
+        .pulse-glow {
+            animation: pulseGlow 3s infinite ease-in-out;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(100%) translateX(-50%); opacity: 0; }
+            to { transform: translateY(0) translateX(-50%); opacity: 1; }
+        }
+        .toast-animate {
+            animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 dark:bg-slate-950 dark:text-slate-100 transition-colors duration-400 relative overflow-x-hidden selection:bg-brand-500 selection:text-white">
+
+    <!-- Interactive Canvas Particle Background -->
+    <canvas id="bg-canvas" class="fixed top-0 left-0 w-full h-full pointer-events-none z-0 opacity-40 dark:opacity-30"></canvas>
+
+    <!-- Navigation Header -->
+<header class="fixed top-0 left-0 w-full z-50 transition-all duration-300 glass-nav border-b border-slate-200/60 dark:border-slate-800/60">
+   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <!-- Brand Logo -->
+   <a href="#hero" class="flex items-center space-x-3 group">
+     <span class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-600 via-brand-500 to-brand-accent flex items-center justify-center text-white shadow-lg shadow-brand-500/30 font-black text-xl group-hover:rotate-12 group-hover:scale-110 transition-transform duration-300">N</span>
+     <span class="bg-gradient-to-r from-slate-900 to-slate-700 dark:from-white dark:to-slate-300 bg-clip-text text-transparent font-extrabold text-xl tracking-tight">NEHA<span class="text-brand-500"></span></span>
+   </a>
+
+            <!-- Desktop Navigation Links -->
+    <nav class="hidden md:flex items-center space-x-1 lg:space-x-2">
+        <a href="#about" class="nav-link px-4 py-2 rounded-xl text-sm font-semibold hover:text-brand-500 dark:hover:text-brand-accent hover:bg-slate-200/50 dark:hover:bg-slate-800/50 transition-all">About</a>
+        <a href="#leadership" class="nav-link px-4 py-2 rounded-xl text-sm font-semibold hover:text-brand-500 dark:hover:text-brand-accent hover:bg-slate-200/50 dark:hover:bg-slate-800/50 transition-all">Leadership</a>
+        <a href="#skills" class="nav-link px-4 py-2 rounded-xl text-sm font-semibold hover:text-brand-500 dark:hover:text-brand-accent hover:bg-slate-200/50 dark:hover:bg-slate-800/50 transition-all">Skills</a>
+        <a href="#projects" class="nav-link px-4 py-2 rounded-xl text-sm font-semibold hover:text-brand-500 dark:hover:text-brand-accent hover:bg-slate-200/50 dark:hover:bg-slate-800/50 transition-all">Projects</a>
+        <a href="#certifications" class="nav-link px-4 py-2 rounded-xl text-sm font-semibold hover:text-brand-500 dark:hover:text-brand-accent hover:bg-slate-200/50 dark:hover:bg-slate-800/50 transition-all">Certifications</a>
+        <a href="#contact" class="nav-link px-4 py-2 rounded-xl text-sm font-semibold hover:text-brand-500 dark:hover:text-brand-accent hover:bg-slate-200/50 dark:hover:bg-slate-800/50 transition-all">Contact</a>
+    </nav>
+
+            <!-- Theme Toggle & CTA Button -->
+    <div class="flex items-center space-x-3">
+        <button id="theme-toggle" type="button" aria-label="Toggle Theme" class="p-2.5 rounded-xl bg-slate-200/80 dark:bg-slate-800/80 text-slate-700 dark:text-slate-300 hover:text-brand-500 dark:hover:text-brand-accent hover:scale-110 active:scale-95 transition-all border border-slate-300/50 dark:border-slate-700/50">
+         <i id="theme-icon-dark" class="fas fa-moon text-lg hidden"></i>
+         <i id="theme-icon-light" class="fas fa-sun text-lg text-amber-400"></i>
+       </button>
+    <a href="#contact" class="btn-shimmer hidden sm:inline-flex items-center justify-center px-5 py-2.5 rounded-xl bg-gradient-to-r from-brand-600 to-brand-500 text-white font-semibold text-sm shadow-lg shadow-brand-500/25 hover:shadow-brand-500/40 hover:-translate-y-0.5 hover:scale-105 active:scale-95 transition-all">
+        <span>Get In Touch</span>
+    </a>
+                <!-- Mobile Menu Icon -->
+    <button id="mobile-menu-btn" type="button" aria-label="Open Navigation" class="md:hidden p-2.5 rounded-xl bg-slate-200/80 dark:bg-slate-800/80 text-slate-700 dark:text-slate-300">
+         <i class="fas fa-bars text-xl"></i>
+    </button>
+</div>
+ </div>
+
+ <!-- Mobile Navigation Drawer -->
+    <div id="mobile-menu" class="hidden md:hidden px-4 pt-2 pb-6 space-y-2 bg-slate-100/95 dark:bg-slate-900/95 border-b border-slate-200 dark:border-slate-800 shadow-xl">
+        <a href="#about" class="mobile-nav-link block px-4 py-2.5 rounded-lg text-base font-medium hover:bg-slate-200 dark:hover:bg-slate-800">About</a>
+        <a href="#leadership" class="mobile-nav-link block px-4 py-2.5 rounded-lg text-base font-medium hover:bg-slate-200 dark:hover:bg-slate-800">Leadership & Experience</a>
+        <a href="#skills" class="mobile-nav-link block px-4 py-2.5 rounded-lg text-base font-medium hover:bg-slate-200 dark:hover:bg-slate-800">Skills</a>
+        <a href="#projects" class="mobile-nav-link block px-4 py-2.5 rounded-lg text-base font-medium hover:bg-slate-200 dark:hover:bg-slate-800">Projects</a>
+        <a href="#certifications" class="mobile-nav-link block px-4 py-2.5 rounded-lg text-base font-medium hover:bg-slate-200 dark:hover:bg-slate-800">Certifications</a>
+        <a href="#contact" class="mobile-nav-link block px-4 py-2.5 rounded-lg text-base font-medium hover:bg-slate-200 dark:hover:bg-slate-800">Contact</a>
+    </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="relative z-10 pt-20">
+
+        <!-- Hero Section -->
+    <section id="hero" class="min-h-[calc(100vh-5rem)] flex items-center justify-center px-4 sm:px-6 lg:px-8 py-16">
+        <div class="max-w-5xl mx-auto text-center space-y-8">
+                
+                <!-- Status & Title Badge -->
+        <div class="inline-flex items-center space-x-2 px-4 py-2 rounded-full glass-card border border-brand-500/30 text-xs sm:text-sm font-semibold text-brand-600 dark:text-brand-accent shadow-sm pulse-glow">
+            <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+            <span>BCA Student • MERN Stack Developer • Full Stack Developer</span>
+        </div>
+
+                <!-- Main Name Header -->
+        <h1 class="text-4xl sm:text-6xl lg:text-7xl font-black tracking-tight text-slate-900 dark:text-white leading-tight">
+             Hi, I'm <span class="bg-gradient-to-r from-brand-500 via-brand-accent to-brand-emerald bg-clip-text text-transparent hover:brightness-125 transition-all">NEHA</span><br>
+         <span class="text-2xl sm:text-4xl lg:text-5xl font-bold">
+             I build <span id="typing-text" class="typing-cursor text-brand-500 dark:text-brand-accent"></span>
+         </span>
+        </h1>
+
+                <!-- Brief Bio Paragraph -->
+        <p class="max-w-3xl mx-auto text-base sm:text-lg text-slate-600 dark:text-slate-300 leading-relaxed">
+            BCA Student at Eternal University building full-stack MERN & Gen AI solutions. Serving as <strong class="text-brand-500 dark:text-brand-accent font-semibold">College Hackathon Incharge</strong>, volunteering at <strong class="text-brand-emerald font-semibold">Akal Academy</strong>, and mentoring peer BCA students in web development.
+        </p>
+
+                <!-- Quick Social & Contact Links Bar -->
+        <div class="flex flex-wrap items-center justify-center gap-4 text-sm text-slate-600 dark:text-slate-400">
+            <span class="flex items-center space-x-1.5 font-medium"><i class="fas fa-location-dot text-brand-500"></i><span>Ludhiana, India</span></span>
+            <span class="hidden sm:inline">•</span>
+            <a href="https://github.com/nehaupadhyay64" target="_blank" class="hover:text-brand-500 transition-all hover:scale-110 inline-flex items-center space-x-1.5 font-semibold"><i class="fab fa-github text-lg"></i><span>GitHub</span></a>
+            <span>•</span>
+            <a href="https://www.linkedin.com/in/neha-upadhyay-19740b386/" target="_blank" class="hover:text-brand-500 transition-all hover:scale-110 inline-flex items-center space-x-1.5 font-semibold"><i class="fab fa-linkedin text-lg text-blue-500"></i><span>LinkedIn</span></a>
+            <span>•</span>
+            <a href="https://www.codechef.com/users/neha_upadhyay" target="_blank" class="hover:text-amber-500 transition-all hover:scale-110 inline-flex items-center space-x-1.5 font-semibold"><i class="fas fa-code text-amber-500"></i><span>CodeChef</span></a>
+        </div>
+
+                <!-- Action Buttons -->
+        <div class="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2">
+            <a href="#projects" class="btn-shimmer w-full sm:w-auto px-8 py-4 rounded-xl bg-gradient-to-r from-brand-600 to-brand-500 text-white font-bold shadow-xl shadow-brand-500/30 hover:shadow-brand-500/50 hover:-translate-y-1 hover:scale-105 transition-all flex items-center justify-center space-x-2">
+            <span>View Projects & Live Demos</span>
+            <i class="fas fa-arrow-right text-sm"></i>
+            </a>
+            <a href="#leadership" class="w-full sm:w-auto px-8 py-4 rounded-xl glass-card text-slate-800 dark:text-slate-200 font-bold hover:bg-slate-200/60 dark:hover:bg-slate-800/80 border border-slate-300 dark:border-slate-700 hover-lift flex items-center justify-center space-x-2">
+            <i class="fas fa-trophy text-amber-500"></i>
+            <span>Leadership & Volunteering</span>
+            </a>
+        </div>
+
+                <!-- Quick Stats -->
+        <div class="pt-10 border-t border-slate-200 dark:border-slate-800/80 max-w-4xl mx-auto grid grid-cols-2 sm:grid-cols-4 gap-4">
+            <div class="glass-card p-4 rounded-xl text-center border border-slate-200 dark:border-slate-800 hover-lift hover-glow-cyan">
+            <span class="block text-2xl sm:text-3xl font-black text-brand-500 font-mono counter" data-target="5">0</span>
+            <span class="text-xs text-slate-600 dark:text-slate-400 font-semibold">Featured Projects</span>
+        </div>
+        <div class="glass-card p-4 rounded-xl text-center border border-slate-200 dark:border-slate-800 hover-lift hover-glow-amber">
+            <span class="block text-2xl sm:text-3xl font-black text-amber-500 font-mono counter" data-target="500">0</span>
+            <span class="text-xs text-slate-600 dark:text-slate-400 font-semibold">CodeChef Solved</span>
+        </div>
+        <div class="glass-card p-4 rounded-xl text-center border border-slate-200 dark:border-slate-800 hover-lift hover-glow-cyan">
+            <span class="block text-2xl sm:text-3xl font-black text-brand-accent font-mono">Lead</span>
+            <span class="text-xs text-slate-600 dark:text-slate-400 font-semibold">Hackathon Incharge</span>
+            </div>
+        <div class="glass-card p-4 rounded-xl text-center border border-slate-200 dark:border-slate-800 hover-lift hover-glow-emerald">
+            <span class="block text-2xl sm:text-3xl font-black text-brand-emerald font-mono counter" data-target="5">0</span>
+            <span class="text-xs text-slate-600 dark:text-slate-400 font-semibold">HTML Mentees</span>
+        </div>
+        </div>
+
+        </div>
+        </section>
+
+        <!-- About Section -->
+        <section id="about" class="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+        <div class="text-center max-w-3xl mx-auto mb-16">
+            <h2 class="text-3xl sm:text-4xl font-extrabold tracking-tight text-slate-900 dark:text-white">About Me</h2>
+            <div class="h-1.5 w-24 bg-gradient-to-r from-brand-500 to-brand-accent mx-auto mt-3 rounded-full"></div>
+            <p class="mt-4 text-slate-600 dark:text-slate-400">Full-Stack MERN Stack Developer, hackathon organizer, and community volunteer.</p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
+                <!-- Main Summary Card -->
+            <div class="lg:col-span-6 glass-card p-6 sm:p-8 rounded-2xl border border-slate-200 dark:border-slate-800 flex flex-col justify-between hover-lift">
+            <div>
+            <div class="flex items-center space-x-3 mb-4">
+                <div class="w-12 h-12 rounded-xl bg-brand-500/15 text-brand-500 flex items-center justify-center text-2xl shadow-inner">
+                    <i class="fas fa-laptop-code"></i>
+                </div>
+                <div>
+                    <h3 class="text-2xl font-bold text-slate-900 dark:text-white">Full-Stack & Leadership</h3>
+                    <p class="text-xs text-brand-500 font-semibold">BCA Student @ Eternal University</p>
+                </div>
+            </div>
+                <p class="text-slate-600 dark:text-slate-300 leading-relaxed mb-4 text-sm sm:text-base">
+                    I am a BCA student specializing in the MERN Stack (MongoDB, Express, React, Node.js) and Generative AI integrations. I build full-stack web applications with RESTful APIs, JWT session security, and dynamic React user interfaces.
+                </p>
+                <p class="text-slate-600 dark:text-slate-300 leading-relaxed text-sm sm:text-base">
+                   In addition to technical development, I serve as the <strong class="text-brand-500 dark:text-brand-accent font-semibold">College Hackathon Incharge</strong> at Eternal University, volunteer at <strong class="text-brand-emerald font-semibold">Akal Academy</strong>, and mentor junior BCA students in HTML and web fundamentals.
+                </p>
+                </div>
+
+                    <!-- Education Detail -->
+                <div class="mt-8 pt-6 border-t border-slate-200 dark:border-slate-800/80">
+                <span class="text-xs font-bold uppercase tracking-wider text-brand-500 block mb-3">Education</span>
+                <div class="flex items-start space-x-4 p-4 rounded-xl bg-slate-100/70 dark:bg-slate-900/70 border border-slate-200/50 dark:border-slate-800/50 hover-glow-cyan transition-all">
+                    <div class="w-10 h-10 rounded-lg bg-brand-accent/10 text-brand-accent flex items-center justify-center text-xl shrink-0">
+                        <i class="fas fa-graduation-cap"></i>
+                    </div>
+                    <div>
+                    <h4 class="font-bold text-slate-900 dark:text-white">Bachelor of Computer Applications (BCA)</h4>
+                    <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-400 font-medium">Eternal University, Himachal Pradesh (2025 – 2028)</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Roles & Highlights Grid -->
+                <div class="lg:col-span-6 space-y-4 flex flex-col justify-between">
+                    <!-- Hackathon Incharge Card -->
+                    <div class="glass-card p-6 rounded-2xl border border-slate-200 dark:border-slate-800 hover-lift hover-glow-amber">
+                        <div class="flex items-start space-x-4">
+                            <div class="w-12 h-12 rounded-xl bg-amber-500/15 text-amber-500 flex items-center justify-center text-2xl shrink-0">
+                                <i class="fas fa-trophy"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-lg text-slate-900 dark:text-white mb-1">College Hackathon Incharge</h4>
+                                <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                                    Currently leading inter-college hackathons at Eternal University. Responsible for managing hackathon logistics, coordinating participant onboarding, and guiding teams through project execution.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Akal Academy Volunteering Card -->
+                    <div class="glass-card p-6 rounded-2xl border border-slate-200 dark:border-slate-800 hover-lift hover-glow-emerald">
+                        <div class="flex items-start space-x-4">
+                            <div class="w-12 h-12 rounded-xl bg-brand-emerald/15 text-brand-emerald flex items-center justify-center text-2xl shrink-0">
+                                <i class="fas fa-hand-holding-heart"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-lg text-slate-900 dark:text-white mb-1">Volunteering @ Akal Academy</h4>
+                                <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                                    Active volunteer supporting educational and social welfare initiatives at Akal Academy. Passionate about empowering students through foundational digital skills and teamwork.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- HTML Peer Mentorship -->
+                    <div class="glass-card p-6 rounded-2xl border border-slate-200 dark:border-slate-800 hover-lift hover-glow-cyan">
+                        <div class="flex items-start space-x-4">
+                            <div class="w-12 h-12 rounded-xl bg-brand-accent/15 text-brand-accent flex items-center justify-center text-2xl shrink-0">
+                                <i class="fas fa-users-gear"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-lg text-slate-900 dark:text-white mb-1">HTML Peer Mentor</h4>
+                                <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                                    Mentor 5 first-semester BCA students in HTML syntax, responsive structure, weekly goals, theory notes, and hands-on web mini-projects.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Leadership & Experience Timeline -->
+        <section id="leadership" class="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <h2 class="text-3xl sm:text-4xl font-extrabold tracking-tight text-slate-900 dark:text-white">Leadership & Experience</h2>
+                <div class="h-1.5 w-24 bg-gradient-to-r from-brand-500 to-brand-accent mx-auto mt-3 rounded-full"></div>
+                <p class="mt-4 text-slate-600 dark:text-slate-400">Campus leadership, hackathon management, community outreach, and peer mentorship.</p>
+            </div>
+
+            <div class="relative max-w-4xl mx-auto">
+                <!-- Vertical Line -->
+                <div class="absolute left-4 sm:left-1/2 top-0 bottom-0 w-1 bg-gradient-to-b from-brand-500 via-brand-accent to-brand-emerald -translate-x-1/2 rounded-full hidden sm:block"></div>
+
+                <div class="space-y-8">
+
+                    <!-- Timeline Item 1: College Hackathon Incharge -->
+                    <div class="relative flex flex-col sm:flex-row items-center group">
+                        <div class="flex items-center justify-start sm:justify-end w-full sm:w-1/2 sm:pr-8">
+                            <div class="glass-card p-6 rounded-2xl border border-slate-200 dark:border-slate-800 hover-lift w-full hover-glow-amber">
+                                <div class="flex items-center justify-between mb-2">
+                                    <span class="px-3 py-1 rounded-full text-xs font-bold bg-amber-500/15 text-amber-500">Campus Leadership</span>
+                                    <span class="text-xs text-slate-600 dark:text-slate-400 font-mono">Current Position</span>
+                                </div>
+                                <h3 class="text-xl font-bold text-slate-900 dark:text-white">College Hackathon Incharge</h3>
+                                <p class="text-xs font-semibold text-brand-500 mb-3">Eternal University</p>
+                                <ul class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 space-y-2 list-disc list-inside">
+                                    <li>Directing event logistics and execution for campus-wide hackathons.</li>
+                                    <li>Mentoring participating student teams in full-stack architecture and project execution.</li>
+                                    <li>Managing judging rubrics, speaker coordination, and final project demos.</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="absolute left-1/2 -translate-x-1/2 w-9 h-9 rounded-full bg-amber-500 text-white flex items-center justify-center text-xs font-bold shadow-lg shadow-amber-500/40 hidden sm:flex z-10 group-hover:scale-125 transition-transform">
+                            <i class="fas fa-trophy text-sm"></i>
+                        </div>
+                        <div class="w-full sm:w-1/2 sm:pl-8"></div>
+                    </div>
+
+                    <!-- Timeline Item 2: Volunteering at Akal Academy -->
+                    <div class="relative flex flex-col sm:flex-row items-center group">
+                        <div class="w-full sm:w-1/2 sm:pr-8"></div>
+                        <div class="absolute left-1/2 -translate-x-1/2 w-9 h-9 rounded-full bg-brand-emerald text-white flex items-center justify-center text-xs font-bold shadow-lg shadow-emerald-500/40 hidden sm:flex z-10 group-hover:scale-125 transition-transform">
+                            <i class="fas fa-heart text-sm"></i>
+                        </div>
+                        <div class="flex items-center justify-start w-full sm:w-1/2 sm:pl-8">
+                            <div class="glass-card p-6 rounded-2xl border border-slate-200 dark:border-slate-800 hover-lift w-full hover-glow-emerald">
+                                <div class="flex items-center justify-between mb-2">
+                                    <span class="px-3 py-1 rounded-full text-xs font-bold bg-brand-emerald/15 text-brand-emerald">Community Service</span>
+                                    <span class="text-xs text-slate-600 dark:text-slate-400 font-mono">Volunteering</span>
+                                </div>
+                                <h3 class="text-xl font-bold text-slate-900 dark:text-white">Volunteer Educator & Community Helper</h3>
+                                <p class="text-xs font-semibold text-brand-emerald mb-3">Akal Academy</p>
+                                <ul class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 space-y-2 list-disc list-inside">
+                                    <li>Engaging in community outreach and student welfare programs.</li>
+                                    <li>Assisting in digital literacy lessons and basic computer skills for students.</li>
+                                    <li>Supporting event planning, teamwork sessions, and educational workshops.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Timeline Item 3: HTML Student Mentor -->
+                    <div class="relative flex flex-col sm:flex-row items-center group">
+                        <div class="flex items-center justify-start sm:justify-end w-full sm:w-1/2 sm:pr-8">
+                            <div class="glass-card p-6 rounded-2xl border border-slate-200 dark:border-slate-800 hover-lift w-full hover-glow-cyan">
+                                <div class="flex items-center justify-between mb-2">
+                                    <span class="px-3 py-1 rounded-full text-xs font-bold bg-brand-500/15 text-brand-500">Mentorship</span>
+                                    <span class="text-xs text-slate-600 dark:text-slate-400 font-mono">Ongoing</span>
+                                </div>
+                                <h3 class="text-xl font-bold text-slate-900 dark:text-white">HTML Peer Mentor</h3>
+                                <p class="text-xs font-semibold text-brand-500 mb-3">1st Semester BCA Students</p>
+                                <ul class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 space-y-2 list-disc list-inside">
+                                    <li>Mentoring 5 first-semester BCA students in HTML5 syntax and web page layout.</li>
+                                    <li>Structuring weekly goals, theory notes, and interactive mini frontend projects.</li>
+                                    <li>Helping beginners debug code and build confidence in practical coding.</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="absolute left-1/2 -translate-x-1/2 w-9 h-9 rounded-full bg-brand-500 text-white flex items-center justify-center text-xs font-bold shadow-lg shadow-brand-500/40 hidden sm:flex z-10 group-hover:scale-125 transition-transform">
+                            <i class="fas fa-chalkboard-user text-sm"></i>
+                        </div>
+                        <div class="w-full sm:w-1/2 sm:pl-8"></div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- Technical Skills Section -->
+        <section id="skills" class="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <h2 class="text-3xl sm:text-4xl font-extrabold tracking-tight text-slate-900 dark:text-white">Technical Skills</h2>
+                <div class="h-1.5 w-24 bg-gradient-to-r from-brand-500 to-brand-accent mx-auto mt-3 rounded-full"></div>
+                <p class="mt-4 text-slate-600 dark:text-slate-400">Core technologies, frameworks, and tools from my full-stack projects.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Frontend -->
+                <div class="glass-card p-6 rounded-2xl border border-slate-200 dark:border-slate-800 hover-lift space-y-4 hover-glow-cyan">
+                    <div class="flex items-center space-x-3 text-brand-500 mb-2">
+                        <i class="fas fa-code text-2xl"></i>
+                        <h3 class="font-bold text-lg text-slate-900 dark:text-white">Frontend</h3>
+                    </div>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="skill-badge px-3 py-1.5 rounded-xl text-xs font-semibold bg-brand-500/10 text-brand-600 dark:text-brand-accent border border-brand-500/20">React (Hooks)</span>
+                        <span class="skill-badge px-3 py-1.5 rounded-xl text-xs font-semibold bg-brand-500/10 text-brand-600 dark:text-brand-accent border border-brand-500/20">React Router</span>
+                        <span class="skill-badge px-3 py-1.5 rounded-xl text-xs font-semibold bg-brand-500/10 text-brand-600 dark:text-brand-accent border border-brand-500/20">Context API</span>
+                        <span class="skill-badge px-3 py-1.5 rounded-xl text-xs font-semibold bg-brand-500/10 text-brand-600 dark:text-brand-accent border border-brand-500/20">JavaScript (ES6+)</span>
+                        <span class="skill-badge px-3 py-1.5 rounded-xl text-xs font-semibold bg-brand-500/10 text-brand-600 dark:text-brand-accent border border-brand-500/20">HTML5 / CSS3</span>
+                        <span class="skill-badge px-3 py-1.5 rounded-xl text-xs font-semibold bg-brand-500/10 text-brand-600 dark:text-brand-accent border border-brand-500/20">Vite</span>
+                    </div>
+                </div>
+
+                <!-- Backend -->
+                <div class="glass-card p-6 rounded-2xl border border-slate-200 dark:border-slate-800 hover-lift space-y-4 hover-glow-emerald">
+                    <div class="flex items-center space-x-3 text-brand-accent mb-2">
+                        <i class="fas fa-server text-2xl"></i>
+                        <h3 class="font-bold text-lg text-slate-900 dark:text-white">Backend</h3>
+                    </div>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="skill-badge px-3 py-1.5 rounded-xl text-xs font-semibold bg-brand-accent/10 text-brand-accent border border-brand-accent/20">Node.js</span>
+                        <span class="skill-badge px-3 py-1.5 rounded-xl text-xs font-semibold bg-brand-accent/10 text-brand-accent border border-brand-accent/20">Express.js</span>
+                        <span class="skill-badge px-3 py-1.5 rounded-xl text-xs font-semibold bg-brand-accent/10 text-brand-accent border border-brand-accent/20">MongoDB</span>
+                        <span class="skill-badge px-3 py-1.5 rounded-xl text-xs font-semibold bg-brand-accent/10 text-brand-accent border border-brand-accent/20">REST APIs</span>
+                        <span class="skill-badge px-3 py-1.5 rounded-xl text-xs font-semibold bg-brand-accent/10 text-brand-accent border border-brand-accent/20">MVC Architecture</span>
+                    </div>
+                </div>
+
+                <!-- Auth & Gen AI -->
+                <div class="glass-card p-6 rounded-2xl border border-slate-200 dark:border-slate-800 hover-lift space-y-4 hover-glow-amber">
+                    <div class="flex items-center space-x-3 text-brand-emerald mb-2">
+                        <i class="fas fa-brain text-2xl"></i>
+                        <h3 class="font-bold text-lg text-slate-900 dark:text-white">Auth & Gen AI</h3>
+                    </div>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="skill-badge px-3 py-1.5 rounded-xl text-xs font-semibold bg-brand-emerald/10 text-brand-emerald border border-brand-emerald/20">JWT Authentication</span>
+                        <span class="skill-badge px-3 py-1.5 rounded-xl text-xs font-semibold bg-brand-emerald/10 text-brand-emerald border border-brand-emerald/20">Gemini API Integration</span>
+                        <span class="skill-badge px-3 py-1.5 rounded-xl text-xs font-semibold bg-brand-emerald/10 text-brand-emerald border border-brand-emerald/20">Token Sessions</span>
+                    </div>
+                </div>
+
+                <!-- Tools & DSA -->
+                <div class="glass-card p-6 rounded-2xl border border-slate-200 dark:border-slate-800 hover-lift space-y-4 hover-glow-cyan">
+                    <div class="flex items-center space-x-3 text-brand-rose mb-2">
+                        <i class="fas fa-tools text-2xl"></i>
+                        <h3 class="font-bold text-lg text-slate-900 dark:text-white">Tools & DSA</h3>
+                    </div>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="skill-badge px-3 py-1.5 rounded-xl text-xs font-semibold bg-brand-rose/10 text-brand-rose border border-brand-rose/20">Git & GitHub</span>
+                        <span class="skill-badge px-3 py-1.5 rounded-xl text-xs font-semibold bg-brand-rose/10 text-brand-rose border border-brand-rose/20">Netlify</span>
+                        <span class="skill-badge px-3 py-1.5 rounded-xl text-xs font-semibold bg-brand-rose/10 text-brand-rose border border-brand-rose/20">Render</span>
+                        <span class="skill-badge px-3 py-1.5 rounded-xl text-xs font-semibold bg-brand-rose/10 text-brand-rose border border-brand-rose/20">CodeChef DSA (500)</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Projects Section -->
+        <section id="projects" class="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <h2 class="text-3xl sm:text-4xl font-extrabold tracking-tight text-slate-900 dark:text-white">Featured Projects</h2>
+                <div class="h-1.5 w-24 bg-gradient-to-r from-brand-500 to-brand-accent mx-auto mt-3 rounded-full"></div>
+                <p class="mt-4 text-slate-600 dark:text-slate-400">Deployed applications featuring full-stack MERN architecture, JWT security, and Generative AI.</p>
+
+                <!-- Project Filters -->
+                <div class="flex flex-wrap items-center justify-center gap-2 mt-8">
+                    <button class="project-filter-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all bg-brand-500 text-white shadow-lg shadow-brand-500/25" data-filter="all">All Projects</button>
+                    <button class="project-filter-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all glass-card text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800" data-filter="mern">MERN Stack</button>
+                    <button class="project-filter-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all glass-card text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800" data-filter="genai">Gen AI</button>
+                    <button class="project-filter-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all glass-card text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800" data-filter="team">Team Projects</button>
+                </div>
+            </div>
+
+            <!-- Projects Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="projects-container">
+                
+                <!-- Project 1: CollabSphere -->
+                <div class="project-card glass-card rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800 hover-lift group flex flex-col hover-glow-cyan" data-category="mern genai">
+                    <div class="relative overflow-hidden h-48 bg-slate-900 flex items-center justify-center p-6 text-center">
+                        <div class="absolute inset-0 bg-gradient-to-tr from-purple-900/80 to-indigo-900/80 opacity-90 group-hover:scale-110 transition-transform duration-500"></div>
+                        <div class="relative z-10 space-y-2">
+                            <i class="fas fa-network-wired text-4xl text-brand-accent mb-1 group-hover:rotate-12 transition-transform duration-300"></i>
+                            <h3 class="text-xl font-black text-white">CollabSphere</h3>
+                            <span class="text-xs text-brand-accent font-bold uppercase tracking-widest block">Mini GitHub + Notion</span>
+                        </div>
+                    </div>
+                    <div class="p-6 flex-1 flex flex-col justify-between space-y-4">
+                        <div>
+                            <div class="flex flex-wrap gap-1.5 mb-3">
+                                <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-brand-500/10 text-brand-500 border border-brand-500/20">MongoDB</span>
+                                <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-brand-500/10 text-brand-500 border border-brand-500/20">Express</span>
+                                <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-cyan-500/10 text-cyan-500 border border-cyan-500/20">React</span>
+                                <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-500 border border-emerald-500/20">Node.js</span>
+                                <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-purple-500/10 text-purple-400 border border-purple-500/20">Gemini AI</span>
+                            </div>
+                            <p class="text-slate-600 dark:text-slate-300 text-xs sm:text-sm leading-relaxed">
+                                Full-stack collaboration platform with React frontend & Node backend structured in MVC design. Features JWT security, Workspace, Analytics views, and Gemini AI.
+                            </p>
+                        </div>
+                        <div class="pt-4 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between">
+                                <a href="https://startling-cassata-aacf9a.netlify.app" target="_blank" rel="noopener noreferrer" class="btn-shimmer px-4 py-2 rounded-xl bg-brand-500 text-white text-xs font-bold hover:bg-brand-600 transition-all hover:scale-105 active:scale-95 flex items-center space-x-1.5">
+                                <i class="fas fa-external-link-alt text-[10px]"></i>
+                                <span>Live Demo</span>
+                                </a>
+                            <button onclick="openModal('project1')" class="btn-shimmer px-4 py-2 rounded-xl bg-brand-500 text-white text-xs font-bold hover:bg-brand-600 transition-all hover:scale-105 active:scale-95 flex items-center space-x-1.5">
+                                <i class="fab text-sm"></i>
+                                <span><Details></Details></span>
+                                 </button>
+                           
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project 2: Ask Gemini -->
+                <div class="project-card glass-card rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800 hover-lift group flex flex-col hover-glow-amber" data-category="genai">
+                    <div class="relative overflow-hidden h-48 bg-slate-900 flex items-center justify-center p-6 text-center">
+                        <div class="absolute inset-0 bg-gradient-to-tr from-cyan-900/80 to-blue-900/80 opacity-90 group-hover:scale-110 transition-transform duration-500"></div>
+                        <div class="relative z-10 space-y-2">
+                            <i class="fas fa-robot text-4xl text-cyan-400 mb-1 group-hover:rotate-12 transition-transform duration-300"></i>
+                            <h3 class="text-xl font-black text-white">Ask Gemini</h3>
+                            <span class="text-xs text-cyan-400 font-bold uppercase tracking-widest block">Gen AI Web App</span>
+                        </div>
+                    </div>
+                    <div class="p-6 flex-1 flex flex-col justify-between space-y-4">
+                        <div>
+                            <div class="flex flex-wrap gap-1.5 mb-3">
+                                <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-amber-500/10 text-amber-500 border border-amber-500/20">JS (ES6+)</span>
+                                <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-500 border border-emerald-500/20">Node.js</span>
+                                <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">Gemini API</span>
+                                <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-purple-500/10 text-purple-400 border border-purple-500/20">Netlify</span>
+                            </div>
+                            <p class="text-slate-600 dark:text-slate-300 text-xs sm:text-sm leading-relaxed">
+                                Gen AI app with interactive prompt input, dedicated response container, and 1-click answer copy. Frontend in HTML/CSS/JS with Node API handler. Deployed on Netlify.
+                            </p>
+                        </div>
+                        <div class="pt-4 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between">
+                           <a href="https://stalwart-dasik-7509ce.netlify.app" target="_blank" rel="noopener noreferrer" class="btn-shimmer px-4 py-2 rounded-xl bg-brand-500 text-white text-xs font-bold hover:bg-brand-600 transition-all hover:scale-105 active:scale-95 flex items-center space-x-1.5">
+                                <i class="fas fa-external-link-alt text-[10px]"></i>
+                                <span>Live Demo</span>
+                           </a>
+                        
+                             <button onclick="openModal('project2')" class="btn-shimmer px-4 py-2 rounded-xl bg-brand-500 text-white text-xs font-bold hover:bg-brand-600 transition-all hover:scale-105 active:scale-95 flex items-center space-x-1.5">
+                                <i class="fab text-sm"></i>
+                                <span><Details></Details></span>
+                             </button>
+                            
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project 4: Mini Authentication System -->
+                <div class="project-card glass-card rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800 hover-lift group flex flex-col hover-glow-cyan" data-category="mern">
+                    <div class="relative overflow-hidden h-48 bg-slate-900 flex items-center justify-center p-6 text-center">
+                        <div class="absolute inset-0 bg-gradient-to-tr from-emerald-900/80 to-green-900/80 opacity-90 group-hover:scale-110 transition-transform duration-500"></div>
+                        <div class="relative z-10 space-y-2">
+                            <i class="fas fa-shield-halved text-4xl text-emerald-400 mb-1 group-hover:rotate-12 transition-transform duration-300"></i>
+                            <h3 class="text-xl font-black text-white">Mini Authentication</h3>
+                            <span class="text-xs text-emerald-400 font-bold uppercase tracking-widest block">JWT + REST API</span>
+                        </div>
+                    </div>
+                    <div class="p-6 flex-1 flex flex-col justify-between space-y-4">
+                        <div>
+                            <div class="flex flex-wrap gap-1.5 mb-3">
+                                <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-500 border border-emerald-500/20">Node.js</span>
+                                <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-brand-500/10 text-brand-500 border border-brand-500/20">Express.js</span>
+                                <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-teal-500/10 text-teal-400 border border-teal-500/20">MongoDB</span>
+                                <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-rose-500/10 text-rose-400 border border-rose-500/20">JWT</span>
+                            </div>
+                            <p class="text-slate-600 dark:text-slate-300 text-xs sm:text-sm leading-relaxed">
+                                REST API with Node, Express, and MongoDB for user registration and protected login sessions. Deployed live on Netlify.
+                            </p>
+                        </div>
+                        <div class="pt-4 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between">
+                        <a href="https://neha-auth-mini-project.netlify.app" target="_blank" rel="noopener noreferrer" class="btn-shimmer px-4 py-2 rounded-xl bg-brand-500 text-white text-xs font-bold hover:bg-brand-600 transition-all hover:scale-105 active:scale-95 flex items-center space-x-1.5">
+                          <i class="fas fa-external-link-alt text-[10px]"></i>
+                          <span>Live Demo</span>
+                        </a>
+                        
+                        <button onclick="openModal('project3')" class="btn-shimmer px-4 py-2 rounded-xl bg-brand-500 text-white text-xs font-bold hover:bg-brand-600 transition-all hover:scale-105 active:scale-95 flex items-center space-x-1.5">
+                            <i class="fab text-sm"></i>
+                            <span>Details</span>
+                        </button>
+                           
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project 5: Markdown Notes Manager -->
+                <div class="project-card glass-card rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800 hover-lift group flex flex-col hover-glow-amber" data-category="mern">
+                    <div class="relative overflow-hidden h-48 bg-slate-900 flex items-center justify-center p-6 text-center">
+                        <div class="absolute inset-0 bg-gradient-to-tr from-amber-900/80 to-orange-900/80 opacity-90 group-hover:scale-110 transition-transform duration-500"></div>
+                        <div class="relative z-10 space-y-2">
+                            <i class="fas fa-file-pen text-4xl text-amber-400 mb-1 group-hover:rotate-12 transition-transform duration-300"></i>
+                            <h3 class="text-xl font-black text-white">Markdown Notes Manager</h3>
+                            <span class="text-xs text-amber-400 font-bold uppercase tracking-widest block">Full CRUD REST API</span>
+                        </div>
+                    </div>
+                    <div class="p-6 flex-1 flex flex-col justify-between space-y-4">
+                        <div>
+                            <div class="flex flex-wrap gap-1.5 mb-3">
+                                <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-500 border border-emerald-500/20">Node.js</span>
+                                <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-amber-500/10 text-amber-500 border border-amber-500/20">Express.js</span>
+                                <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-purple-500/10 text-purple-400 border border-purple-500/20">Netlify</span>
+                            </div>
+                            <p class="text-slate-600 dark:text-slate-300 text-xs sm:text-sm leading-relaxed">
+                                Full CRUD RESTful API with Express.js to create, edit, retrieve, and delete Markdown formatted notes. Deployed on Netlify.
+                            </p>
+                        </div>
+                        <div class="pt-4 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between">
+                           <a href="https://mini-project2-neha.netlify.app" target="_blank" rel="noopener noreferrer" class="btn-shimmer px-4 py-2 rounded-xl bg-brand-500 text-white text-xs font-bold hover:bg-brand-600 transition-all hover:scale-105 active:scale-95 flex items-center space-x-1.5">
+                                <i class="fas fa-external-link-alt text-[10px]"></i>
+                                <span>Live Demo</span>
+                            </a>
+                           <button onclick="openModal('project4')" class="btn-shimmer px-4 py-2 rounded-xl bg-brand-500 text-white text-xs font-bold hover:bg-brand-600 transition-all hover:scale-105 active:scale-95 flex items-center space-x-1.5">
+                                <i class="fab text-sm"></i>
+                                <span>Details</span>
+                            </button>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Certifications Section -->
+        <section id="certifications" class="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <h2 class="text-3xl sm:text-4xl font-extrabold tracking-tight text-slate-900 dark:text-white">Certifications & Credentials</h2>
+                <div class="h-1.5 w-24 bg-gradient-to-r from-brand-500 to-brand-accent mx-auto mt-3 rounded-full"></div>
+                <p class="mt-4 text-slate-600 dark:text-slate-400">Verified competitive programming achievements and practical internship credentials.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- Cert 1: CodeChef -->
+                <div class="glass-card p-6 rounded-2xl border border-slate-200 dark:border-slate-800 hover-lift flex flex-col justify-between space-y-4 hover-glow-amber">
+                    <div class="space-y-3">
+                        <div class="flex items-center space-x-4">
+                            <div class="w-14 h-14 rounded-2xl bg-amber-500/15 text-amber-500 flex items-center justify-center text-3xl shrink-0 shadow-inner">
+                                <i class="fas fa-award"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-lg text-slate-900 dark:text-white">CodeChef 500-Difficulty Practice Completed</h3>
+                                <p class="text-xs text-amber-500 font-semibold">Completed April 2026</p>
+                            </div>
+                        </div>
+                        <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                            Successfully solved all practice problems under the 500 difficulty rating on CodeChef, demonstrating strong problem solving and algorithmic fundamentals.
+                        </p>
+                        <div class="text-xs font-mono bg-slate-100 dark:bg-slate-900/90 p-3.5 rounded-xl border border-slate-200 dark:border-slate-800 space-y-1">
+                            <div class="flex justify-between">
+                                <span class="text-slate-500">Username:</span>
+                                <span class="text-brand-500 font-bold">neha_upadhyay</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="pt-2">
+                        <a href="https://drive.google.com/file/d/1ZGPsyspBfbUX2n0DX3tkFX7N7bCVe2At/view?usp=sharing" target="_blank" class="w-full py-3 rounded-xl bg-amber-500/10 text-amber-500 hover:bg-amber-500 hover:text-white transition-all text-xs font-bold flex items-center justify-center space-x-2">
+                            <i class="fas fa-certificate text-sm"></i>
+                            <span>View Verified CodeChef Certificate</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Cert 2: Young Founder of School -->
+                <div class="glass-card p-6 rounded-2xl border border-slate-200 dark:border-slate-800 hover-lift flex flex-col justify-between space-y-4 hover-glow-emerald">
+                    <div class="space-y-3">
+                        <div class="flex items-center space-x-4">
+                            <div class="w-14 h-14 rounded-2xl bg-brand-accent/15 text-brand-accent flex items-center justify-center text-3xl shrink-0 shadow-inner">
+                                <i class="fas fa-microchip"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-lg text-slate-900 dark:text-white">Young Founder of School - AI Internship</h3>
+                                <p class="text-xs text-brand-accent font-semibold">Practical AI Tools & Communication</p>
+                            </div>
+                        </div>
+                        <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                            Explored practical capabilities and challenges of AI tools in work workflows while developing effective technical communication skills through guided practice.
+                        </p>
+                    </div>
+                    <div class="pt-2">
+                       <a href="https://drive.google.com/file/d/1L-mA2cuWVwMd4B5qjSjniWTpUdfeYw2K/view?usp=sharing" target="_blank" rel="noopener noreferrer" class="w-full py-3 rounded-xl bg-brand-accent/10 text-brand-accent hover:bg-brand-accent hover:text-white transition-all text-xs font-bold flex items-center justify-center space-x-2">
+                            <i class="fas fa-certificate text-sm"></i>
+                            <span>View Verified Certificate</span>
+                       </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact" class="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <h2 class="text-3xl sm:text-4xl font-extrabold tracking-tight text-slate-900 dark:text-white">Contact & Connect</h2>
+                <div class="h-1.5 w-24 bg-gradient-to-r from-brand-500 to-brand-accent mx-auto mt-3 rounded-full"></div>
+                <p class="mt-4 text-slate-600 dark:text-slate-400">Seeking web development internships. Let's build something together!</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                <!-- Direct Info Cards -->
+                <div class="lg:col-span-5 space-y-4">
+                    <!-- Email -->
+                    <div class="glass-card p-5 rounded-2xl border border-slate-200 dark:border-slate-800 flex items-center justify-between hover-lift hover-glow-cyan">
+                        <div class="flex items-center space-x-4">
+                            <div class="w-12 h-12 rounded-xl bg-brand-500/15 text-brand-500 flex items-center justify-center text-xl shrink-0">
+                                <i class="fas fa-envelope"></i>
+                            </div>
+                            <div class="overflow-hidden">
+                                <span class="text-[11px] text-slate-500 block font-bold uppercase tracking-wider">Email</span>
+                                <span class="text-xs sm:text-sm font-bold text-slate-900 dark:text-white truncate block">nairaupadhyay64@gmail.com</span>
+                            </div>
+                        </div>
+                        <button onclick="copyToClipboard('nairaupadhyay64@gmail.com', 'Email copied to clipboard!')" class="p-2.5 rounded-xl bg-slate-200/60 dark:bg-slate-800/60 hover:text-brand-500 hover:scale-110 active:scale-95 transition-all" title="Copy Email">
+                            <i class="fas fa-copy"></i>
+                        </button>
+                    </div>
+
+                    <!-- Phone -->
+                    <div class="glass-card p-5 rounded-2xl border border-slate-200 dark:border-slate-800 flex items-center justify-between hover-lift hover-glow-amber">
+                        <div class="flex items-center space-x-4">
+                            <div class="w-12 h-12 rounded-xl bg-brand-accent/15 text-brand-accent flex items-center justify-center text-xl shrink-0">
+                                <i class="fas fa-phone"></i>
+                            </div>
+                            <div>
+                                <span class="text-[11px] text-slate-500 block font-bold uppercase tracking-wider">Phone / WhatsApp</span>
+                                <span class="text-xs sm:text-sm font-bold text-slate-900 dark:text-white">+91-7814420052</span>
+                            </div>
+                        </div>
+                        <a href="tel:+917814420052" class="p-2.5 rounded-xl bg-slate-200/60 dark:bg-slate-800/60 hover:text-brand-accent hover:scale-110 active:scale-95 transition-all" title="Call Direct">
+                            <i class="fas fa-phone-flip"></i>
+                        </a>
+                    </div>
+
+                    <!-- Location -->
+                    <div class="glass-card p-5 rounded-2xl border border-slate-200 dark:border-slate-800 flex items-center space-x-4 hover-lift hover-glow-emerald">
+                        <div class="w-12 h-12 rounded-xl bg-brand-emerald/15 text-brand-emerald flex items-center justify-center text-xl shrink-0">
+                            <i class="fas fa-location-dot"></i>
+                        </div>
+                        <div>
+                            <span class="text-[11px] text-slate-500 block font-bold uppercase tracking-wider">Location</span>
+                            <span class="text-xs sm:text-sm font-bold text-slate-900 dark:text-white">Ludhiana, Punjab, India</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contact Form -->
+                <div class="lg:col-span-7">
+                    <form id="contact-form" onsubmit="handleFormSubmit(event)" class="glass-card p-6 sm:p-8 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-5 hover-lift">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                            <div>
+                                <label for="form-name" class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">Your Name</label>
+                                <input type="text" id="form-name" required placeholder="John Doe" class="w-full px-4 py-3 rounded-xl bg-slate-100/80 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 focus:outline-none focus:border-brand-500 text-sm transition-all">
+                            </div>
+                            <div>
+                                <label for="form-email" class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">Your Email</label>
+                                <input type="email" id="form-email" required placeholder="john@example.com" class="w-full px-4 py-3 rounded-xl bg-slate-100/80 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 focus:outline-none focus:border-brand-500 text-sm transition-all">
+                            </div>
+                        </div>
+                        <div>
+                            <label for="form-subject" class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">Subject</label>
+                            <input type="text" id="form-subject" required placeholder="Web Development Internship / Opportunity" class="w-full px-4 py-3 rounded-xl bg-slate-100/80 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 focus:outline-none focus:border-brand-500 text-sm transition-all">
+                        </div>
+                        <div>
+                            <label for="form-message" class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">Message</label>
+                            <textarea id="form-message" rows="4" required placeholder="Hi Neha, I would like to discuss an opportunity..." class="w-full px-4 py-3 rounded-xl bg-slate-100/80 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 focus:outline-none focus:border-brand-500 text-sm transition-all resize-none"></textarea>
+                        </div>
+                        <button type="submit" class="btn-shimmer w-full py-4 rounded-xl bg-gradient-to-r from-brand-600 to-brand-500 text-white font-bold text-sm shadow-xl shadow-brand-500/30 hover:shadow-brand-500/50 hover:scale-[1.01] active:scale-95 transition-all flex items-center justify-center space-x-2">
+                            <i class="fas fa-paper-plane text-xs"></i>
+                            <span>Send Message</span>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="py-8 border-t border-slate-200/80 dark:border-slate-800/80 text-center text-xs text-slate-500 dark:text-slate-400 relative z-10">
+        <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <p>© 2026 NEHA. Built with HTML, CSS, JavaScript & MERN Passion.</p>
+            <div class="flex items-center space-x-4">
+                <a href="#hero" class="hover:text-brand-500 transition-colors">Back to top <i class="fas fa-arrow-up text-[10px] ml-1"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Interactive Live Demo Modal Window -->
+    <div id="project-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md">
+        <div class="glass-card max-w-2xl w-full rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800 shadow-2xl relative max-h-[90vh] flex flex-col">
+            <div class="p-6 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
+                <h3 id="modal-title" class="text-xl font-bold text-slate-900 dark:text-white">Project Details</h3>
+                <button onclick="closeModal()" class="w-8 h-8 rounded-full bg-slate-200 dark:bg-slate-800 flex items-center justify-center text-slate-600 dark:text-slate-300 hover:text-brand-500">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="p-6 overflow-y-auto space-y-4 text-xs sm:text-sm text-slate-600 dark:text-slate-300" id="modal-body">
+                <!-- Modal content loaded dynamically -->
+            </div>
+            <div class="p-4 border-t border-slate-200 dark:border-slate-800 bg-slate-100/50 dark:bg-slate-900/50 flex justify-end space-x-3">
+                <button onclick="closeModal()" class="px-4 py-2 rounded-xl bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-semibold text-xs">Close</button>
+                <a id="modal-live-btn" href="#" target="_blank" class="px-4 py-2 rounded-xl bg-brand-500 text-white font-semibold text-xs hover:bg-brand-600 transition-all">Launch Deployed App</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification Popup -->
+    <div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 hidden toast-animate px-6 py-3 rounded-2xl bg-slate-900 text-white text-xs sm:text-sm font-semibold shadow-2xl border border-brand-500/40 flex items-center space-x-3">
+        <i class="fas fa-circle-check text-brand-emerald text-base"></i>
+        <span id="toast-msg">Notification Message</span>
+    </div>
+
+<script src="script.js"></script>
+
+</body>
+</html>
